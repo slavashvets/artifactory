@@ -1,0 +1,14 @@
+<div class="storage-usage" ng-class="{'infinity-storage': StorageUsage.SpecialValues.isSpecialValue(StorageUsage.total)}">
+    <div ng-repeat="threshold in StorageUsage.thresholds"
+         class="threshold-container">
+        <div class="threshold"
+             ng-class="threshold.type"
+             ng-style="{left: threshold.value + '%'}">
+            <div class="threshold-icon" jf-tooltip="{{threshold.type === 'warning' ? 'Storage Space Warning ' + threshold.value + '%' : 'Storage Space Limit ' + threshold.value + '%'}}">{{threshold.value}}</div>
+        </div>
+    </div>
+    <span ng-if="StorageUsage.total === StorageUsage.SpecialValues.INFINITY_VALUE" class="infinity-sign">&infin;</span>
+    <span ng-if="StorageUsage.total === StorageUsage.SpecialValues.UNSUPPORTED_VALUE" class="unsupported-sign">?</span>
+    <div class="storage-usage-used" ng-style="{width:StorageUsage.getPercents()}"></div>
+</div>
+
