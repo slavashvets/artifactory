@@ -1,0 +1,11 @@
+<config version="2">
+    <chain>
+        <provider id="cache-fs" type="cache-fs">
+            <provider id="redundant" type="redundant">
+                <redundancy>2</redundancy>
+                <sub-provider id="shard-state-aware-1" type="state-aware"/>
+                <sub-provider id="shard-state-aware-2" type="state-aware"/>
+            </provider>
+        </provider>
+    </chain>
+</config>
