@@ -1,0 +1,15 @@
+<config version="v1">
+
+    <!-- FullDB default chain -->
+    <chain template="full-db">
+        <provider id="cache-fs" type="cache-fs">
+            <provider id="blob" type="blob"/>
+        </provider>
+    </chain>
+
+    <!-- FullDB chain without caching -->
+    <chain template="full-db-direct">
+        <provider id="blob" type="blob"/>
+    </chain>
+
+</config>
