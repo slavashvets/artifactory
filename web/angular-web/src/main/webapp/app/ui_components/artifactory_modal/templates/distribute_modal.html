@@ -1,0 +1,60 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="close" aria-label="Close" ng-click="$close()"><span
+            aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title">{{title}}</h3>
+</div>
+<div class="modal-body">
+    <form name="distributeRepo">
+
+
+        <div class="form-group">
+            <div class="form-group-cell">
+                <jf-field>
+                    <label>Distribution Repository</label>
+                    <jf-ui-select jf-select-model="data.selectedRepo"
+                                  jf-select-disabled="redistribute"
+                                  jf-select-options="distributionRepositoriesOptions"></jf-ui-select>
+                </jf-field>
+                <div class="jf-validation"
+                     ng-if="distType==='build' && !distributionRepositoriesOptions.length">To use the build distribution<br>you must configure a distribution repository</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-group-cell">
+                <jf-checkbox text="Distribute Artifacts Asynchronously">
+                    <input type="checkbox"
+                           id="async"
+                           ng-model="data.async"/>
+                </jf-checkbox>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-group-cell">
+                <jf-checkbox text="Publish Distributed Artifacts">
+                    <input type="checkbox"
+                           id="publish"
+                           ng-model="data.publish"/>
+                </jf-checkbox>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-group-cell">
+                <jf-checkbox text="Override Existing Files">
+                    <input type="checkbox"
+                           id="overrideExistingFiles"
+                           ng-model="data.overrideExistingFiles"/>
+                </jf-checkbox>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div class="modal-footer">
+    <!--<button class="btn btn-secondary">Dry Run</button>-->
+    <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+    <button class="btn btn-primary" ng-click="distribute()" ng-disabled="!data.selectedRepo">Distribute</button>
+</div>

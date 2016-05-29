@@ -1,0 +1,282 @@
+<div class="wizard-content">
+<div ng-show="RepositoryForm.isCurrentTab('basic')">
+
+        <div class="form-group">
+            <div class="form-group-cell"
+                 ng-if="RepositoryForm.newRepository">
+                <jf-field validations="repositores"
+                          autofocus="RepositoryForm.isCurrentTab('basic') && !RepositoryForm.isBintrayModalOpen">
+                    <label for="repoKey-new" class="mandatory">Repository Key</label>
+                    <input type="text" class="input-text"
+                           id="repoKey-new"
+                           name="repoKey"
+                           ng-required="!RepositoryForm.isBintrayModalOpen"
+                           jf-repokey-validator="RepositoryForm"
+                           ng-model="RepositoryForm.repoInfo.general.repoKey"
+                           ng-change="RepositoryForm.onChangeRepoKey()"
+                           ng-model-options="{debounce: { 'default': 500 } }"/>
+                </jf-field>
+                <ng-messages for="RepositoryForm.repositoriesForm.repoKey.$error" class="jf-validation">
+                    <div ng-message-exp="'repoKeyValidator'" id="repository-key-validator">{{ RepositoryForm.repoKeyValidatorMessage }}</div>
+                </ng-messages>
+            </div>
+            <div class="form-group-cell"
+                 ng-if="!RepositoryForm.newRepository">
+                <jf-field validations="repositores" autofocus="true">
+                    <label for="repoKey-edit" class="mandatory">Repository Key</label>
+                    <input type="text"
+                           class="input-text"
+                           id="repoKey-edit"
+                           name="repoKey"
+                           ng-model="RepositoryForm.repoInfo.general.repoKey"
+                           ng-disabled="!RepositoryForm.newRepository"/>
+                </jf-field>
+                <ng-messages for="RepositoryForm.repositoriesForm.repoKey.$error" class="jf-validation">
+                    <div ng-message-exp="'repoKeyValidator'" id="repository-key-validator">{{ RepositoryForm.repoKeyValidatorMessage }}</div>
+                </ng-messages>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <jf-panel jf-panel-heading="General">
+                    <div class="form-group">
+                        <div class="form-group-cell">
+                            <jf-field>
+                                <label>Description</label>
+                <textarea type="text"
+                          class="input-text"
+                          name="publicDescription"
+                          cols="5"
+                          ng-model="RepositoryForm.repoInfo.basic.publicDescription"
+                          id="local-repository-public-description-textarea">
+                </textarea>
+                            </jf-field>
+                        </div>
+                    </div>
+                </jf-panel>
+            </div>
+
+            <div class="col-lg-6">
+                <div>
+                    <jf-panel jf-panel-heading="Bintray Application">  <!--ng-if="!RepositoryForm.newRepository"-->
+                        <div class="alert alert-danger" ng-if="RepositoryForm.repoInfo.typeSpecific.authenticated == false">
+                            Bintray application has been revoked. Generate new <a href="" ng-click="RepositoryForm.openBintrayOAuthModal()">Bintray authorization</a>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group-cell">
+                                <jf-field>
+                                    <label>Client ID</label>
+                                    <!--<jf-help-tooltip html="RepositoryForm.TOOLTIP.localForm.maxUniqueSnapshots"></jf-help-tooltip>--> <!--todo-->
+                                    <input type="text"
+                                           class="input-text"
+                                           name="clientId"
+                                           id="clientId"
+                                           readonly
+                                           ng-class="{'invalid ng-invalid': RepositoryForm.repoInfo.typeSpecific.authenticated == false}"
+                                           ng-model="RepositoryForm.repoInfo.typeSpecific.clientId"/>
+                                </jf-field>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-group-cell">
+                                <jf-field>
+                                    <label>Organization</label>
+                                    <!--<jf-help-tooltip html="RepositoryForm.TOOLTIP.localForm.maxUniqueSnapshots"></jf-help-tooltip>--> <!--todo-->
+                                    <input type="text"
+                                           class="input-text"
+                                           id="organizationName"
+                                           value="{{RepositoryForm.repoInfo.typeSpecific.org}}"
+                                           readonly />
+                                </jf-field>
+                            </div>
+                        </div>
+
+                    </jf-panel>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <jf-panel jf-panel-heading="Bintray Product">
+                    <div class="form-group half-margin-bottom">
+                        <div class="form-group-cell form-checkbox">
+                            <jf-checkbox text="Use This Repository To Distribute a Product">
+                                <input type="checkbox"
+                                       id="distributionType"
+                                       ng-model="RepositoryForm.distributionType"
+                                       ng-change="RepositoryForm.changeDistribute()" />
+                            </jf-checkbox>
+                            <jf-help-tooltip html="RepositoryForm.TOOLTIP.distributionForm.distributeProduct"></jf-help-tooltip>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group-cell">
+                            <jf-field validations="distRepo">
+                                <label for="distribute" class="mandatory">Product Name</label>
+                                <input type="text"
+                                       class="input-text"
+                                       id="distribute"
+                                       name="distribute"
+                                       ui-validate="{illegalProductName: 'RepositoryForm.isProductNameValid($value)'}"
+                                       ng-model="RepositoryForm.repoInfo.basic.productName"
+                                       ng-disabled="!RepositoryForm.distributionType"
+                                       ng-required="RepositoryForm.distributionType">
+                            </jf-field>
+                        </div>
+                    </div>
+                </jf-panel>
+                <!--<jf-panel jf-panel-heading="Xray Integration">
+                    <div class="form-group form-checkbox">
+                        <jf-checkbox text="Send Events to Xray">
+                            <input type="checkbox"
+                                   id="xrayIndex"
+                                   ng-model="RepositoryForm.repoInfo.basic.xrayIndex">
+                        </jf-checkbox>
+                    </div>
+                </jf-panel>-->
+            </div>
+
+            <div class="col-lg-6">
+                <jf-panel jf-panel-heading="Default Repository Settings">
+
+                    <div class="form-group repo-visibility">
+                        <div class="info-box">Artifactory will use the configuration below to set visibility when creating a new Bintray repository.<br />
+                            If distributing to existing repository Artifactory will <strong>not</strong> override the configuration.</div>
+                        <jf-switch
+                                jf-switch-title="Repository Visibility"
+                                ng-model="RepositoryForm.defaultNewRepoPrivateSwitch"
+                                ng-change="RepositoryForm.changeDistributeVisibility()"
+                                ng-if="RepositoryForm.repoInfo.typeSpecific.premium || RepositoryForm.isBintrayModalOpen"
+                                options="['Private', 'Public']"></jf-switch>  <!--ng-disabled="!RepositoryForm.repoInfo.typeSpecific.isPremium"-->
+
+                        <div class="jf-switch" ng-if="!RepositoryForm.repoInfo.typeSpecific.premium && !RepositoryForm.isBintrayModalOpen">
+                            <span class="jf-switch-title">Repository Visibility</span>
+                            <ul class="jf-switch-options">
+                                <li jf-tooltip="{{RepositoryForm.TOOLTIP.distributionForm.repositoryVisibility}}">
+                                    <a class="jf-switch-option disabled" href="">Private</a>
+                                    <span class="license-required">&nbsp;</span>
+                                </li>
+                                <li>
+                                    <a class="jf-switch-option disabled active" href="">Public</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </jf-panel>
+                <jf-panel jf-panel-heading="Default Package Settings">
+                    <div class="info-box">Artifactory will use the configuration below to set the license and VCS URL when creating a new package.<br />
+                        If distributing to existing package in Bintray Artifactory will <strong>not</strong> override the configuration.</div>
+                    <div class="form-group">
+                        <div class="form-group-cell">
+                            <label ng-class="{'mandatory': !RepositoryForm.repoInfo.basic.defaultNewRepoPrivate}">Licenses</label>
+                            <selectize placeholder='Select Value...'
+                                       config="RepositoryForm.licensesListConfig"
+                                       options="RepositoryForm.licensesList"
+                                       ng-model="RepositoryForm.repoInfo.basic.defaultLicenses"
+                                       ng-required="!RepositoryForm.repoInfo.basic.defaultNewRepoPrivate">
+                            </selectize>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-group-cell">
+                            <jf-field validations="common">
+                                <label for="defaultVcsUrl" ng-class="{'mandatory': !RepositoryForm.repoInfo.basic.defaultNewRepoPrivate}">VCS URL</label>
+                                <input type="url" id="defaultVcsUrl" name="defaultVcsUrl" class="input-text" ng-model="RepositoryForm.repoInfo.basic.defaultVcsUrl" ng-required="!RepositoryForm.repoInfo.basic.defaultNewRepoPrivate">
+                            </jf-field>
+                        </div>
+                    </div>
+                </jf-panel>
+
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="RepositoryForm.isCurrentTab('advanced')">
+
+
+        <div class="form-group">
+            <div class="form-group-cell">
+                <jf-field>
+                    <label>Proxy</label>
+                    <jf-ui-select jf-select-model="RepositoryForm.repoInfo.advanced.proxy"
+                                  jf-select-options="RepositoryForm.fields.proxies"></jf-ui-select>
+                </jf-field>
+            </div>
+        </div>
+
+        <div class="form-group half-margin-bottom">
+            <div class="form-group-cell">
+                <jf-checkbox text="GPG Signing">
+                    <input type="checkbox"
+                           id="gpg-signing"
+                           ng-model="RepositoryForm.repoInfo.advanced.gpgSign"/>
+                </jf-checkbox>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-group-cell">
+                <jf-field validations="common">
+                    <label for="gpgPassphrase">GPG Passphrase</label>
+                    <input type="password" placeholder="" class="input-text" id="gpgPassphrase" name="gpgPassphrase" ng-model="RepositoryForm.repoInfo.advanced.gpgPassPhrase" ng-disabled="!RepositoryForm.repoInfo.advanced.gpgSign">
+                </jf-field>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-group-cell">
+                <div jf-disable-feature="distribution-map-properties">
+                    <jf-list-maker values="RepositoryForm.repoInfo.advanced.whiteListedProperties"
+                                   label="Map Properties to Bintray Attributes"
+                                   help-tooltip="RepositoryForm.TOOLTIP.distributionForm.includesPattern"
+                                   object-name="Property Key...">
+                    </jf-list-maker>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div ng-show="RepositoryForm.isCurrentTab('rules')">
+
+        <!--<div>
+            <jf-panel jf-panel-heading="Rules Testing" jf-panel-classes="borderless">
+                <div class="form-group">
+
+                    <div class="form-group-cell">
+                        <jf-field>
+                            <label for="testAllRules">Package Repo Path</label>
+                            <input type="text"
+                                   class="input-text"
+                                   name="testAllRules"
+                                   id="testAllRules"
+                                   ng-model="RepositoryForm.testAllRules" />
+                        </jf-field>
+                    </div>
+                    <div class="form-group-cell form-button">
+                        <button class="btn btn-secondary">Test</button>
+                    </div>
+                </div>
+            </jf-panel>
+        </div>-->
+
+        <div class="pull-right admin-grid-buttons">
+            <a ng-click="RepositoryForm.rulesPopup()">
+                <i class="grid-button-icon icon icon-new"></i>New
+            </a>
+        </div>
+
+        <p ng-if="RepositoryForm.noRules">No rules to show</p>
+        <jf-grid ng-if="RepositoryForm.isCurrentTab('rules')"
+                 grid-options="RepositoryForm.rulesGridOptions"
+                 object-name="rule/rules"
+                 auto-focus="true"
+                 filter-field="name"
+                 filter-field2="type">
+        </jf-grid>
+    </div>
+</div>
